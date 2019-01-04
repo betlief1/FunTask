@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, Alert, TouchableOpacity,AsyncStorage } from 'react-native';
+import { StyleSheet, Text, View, Alert, TouchableOpacity,AsyncStorage, FlatList } from 'react-native';
 import { Actions } from "react-native-router-flux";
 import * as con from '../config/config'
 import * as uti from '../utils/Utils'
@@ -13,23 +13,61 @@ export default class Candidate extends Component {
     super(props);
     this.state = {
       token: null,
+      name: null,
+      candidatee: null
     };
   }
+
  
   _onPress() {
-    Alert.alert('My Informations')
-  }
+    
+    Alert.alert(this.state.name);
   
+  }
+
+  componentDidMount(){
+    uti.FetchData("https://playground-test-api.herokuapp.com/api/candidate/:id", this.props.token)
+    .then(res => {
+        console.log(res);
+        this.setState({
+          token : res,
+          candidatee : res.candidate,
+          name: res.candidate.candidateName
+        });
+    }).catch(error => {
+      console.log(error);
+    });
+  }
+
+  /*
+
+      Postman kullanarak Api'ye get isteği yolladım aşağıdaki json sonucunu aldım.
+      Parametre olarak FetchData metoduna this.props.token'i gönderdim.
+      Fakat postman'de yaptığım isteği FetchData metodunda yapmaya çalıştığımda result olarak bana geri döndüremedim.
+      Eğer FetchData metodundan resultu alsaydım ismi name olan state'e atıp ordan Text'e yazdırıcaktım.
+      Ve aynı şekilde alert olarak onPress fonksiyonunda ismi gösterebilirdim.
+
+      {
+        "candidate": {
+            "candidateName": "Berkay Dagli",
+            "candidateId": "5c2f0f30d649e300176e34c9"
+        },
+        "result": "success"
+      }
+  */
+
   render() {
-    const candidateToken = this.props.token
+    const candidateToken = this.props.token;
+    
     return (
       <View style={styles.container}>
         <Text styles={styles.welcome}>Welcome</Text>
-        <Text styles={styles.welcome}>{candidateToken}</Text>
+        <Text styles={styles.welcome}>{this.state.name}</Text>
 
         <TouchableOpacity onPress={() => this._onPress()} style={styles.actionButton}>
           <Text style={styles.actionText}>Get My Informations</Text>
         </TouchableOpacity>
+
       </View>
 
     );
