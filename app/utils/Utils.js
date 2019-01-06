@@ -1,11 +1,8 @@
 import * as con from '../config/config'
 
-export function FetchData(url = null, id = null) {
+export function FetchData(url = null) {
   return new Promise(function (res, rej) {
     fetch(url, {
-      params: {
-        "id" : id
-      },
       headers: {
         "Content-Type": "application/json",
         "client-key": con.CLIENT_KEY
