@@ -14,24 +14,29 @@ export default class Candidate extends Component {
     this.state = {
       token: null,
       name: null,
-      candidatee: null
     };
   }
 
  
   _onPress() {
-    
-    Alert.alert(this.state.name);
   
+  Alert.alert(
+    'Informations',
+    'Name: ' + this.state.name + '\r\n' + 'ID: ' + this.props.token,
+    [
+      {text: 'OK', onPress: () => console.log('OK Pressed')},
+    ],
+    { cancelable: false }
+  )
+    
   }
 
   componentDidMount(){
-    uti.FetchData("https://playground-test-api.herokuapp.com/api/candidate/:id", this.props.token)
+    uti.FetchData("https://playground-test-api.herokuapp.com/api/candidate/" + this.props.token)
     .then(res => {
         console.log(res);
         this.setState({
           token : res,
-          candidatee : res.candidate,
           name: res.candidate.candidateName
         });
     }).catch(error => {
@@ -39,25 +44,9 @@ export default class Candidate extends Component {
     });
   }
 
-  /*
-
-      Postman kullanarak Api'ye get isteği yolladım aşağıdaki json sonucunu aldım.
-      Parametre olarak FetchData metoduna this.props.token'i gönderdim.
-      Fakat postman'de yaptığım isteği FetchData metodunda yapmaya çalıştığımda result olarak bana geri döndüremedim.
-      Eğer FetchData metodundan resultu alsaydım ismi name olan state'e atıp ordan Text'e yazdırıcaktım.
-      Ve aynı şekilde alert olarak onPress fonksiyonunda ismi gösterebilirdim.
-
-      {
-        "candidate": {
-            "candidateName": "Berkay Dagli",
-            "candidateId": "5c2f0f30d649e300176e34c9"
-        },
-        "result": "success"
-      }
-  */
 
   render() {
-    const candidateToken = this.props.token;
+    // const candidateToken = this.props.token;
     
     return (
       <View style={styles.container}>
